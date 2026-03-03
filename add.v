@@ -1,8 +1,10 @@
-module add(A, B, Result);
-input [31:0] A,B;
-output [31:0] Result;
+module add(
+	input 		[31:0] 	A,
+	input 		[31:0] 	B,
+	output reg	[31:0] 	Result
+);
 
-reg [31:0] Result;
+
 reg [32:0] LocalCarry;
 
 integer i;

@@ -13,15 +13,7 @@ module DataPath(
 	input wire Zhighin, Zlowin,
 	
 	//input wire [31:0] Mdatain,
-	input wire [4:0] opcode,
-	
-	//input CON FF
-	input wire CONin,
-	input wire Out_Portin,
-	input wire strobe,
-	input wire [31:0] In_Data,
-	output wire CON,
-	output wire [31:0] Out_Port
+	input wire [4:0] opcode
 );
 
 
@@ -103,29 +95,6 @@ always @(posedge clock or posedge clear)
 					Zreg[31:0] <= {ALU_LO};
 			end
 	end
-
-inport inport_inst (
-    .clr(clear),
-    .clk(clock),
-    .strobe(strobe),
-    .InputIn(In_Data),
-    .inport_out(BusMuxInInPort)
-);
-
-outport outport_inst (
-    .clr(clear),
-    .clk(clock),
-    .en(Out_Portin),
-    .BusMuxOut(BusMuxOut),
-    .outport_out(Out_Port)
-);
-
-con_ff con_ff_inst (
-    .irInput(IRdataOut),
-    .BusMuxOut(BusMuxOut),
-    .CONin(CONin),
-    .conOut(CON)
-);
 
 //Bus
 Bus bus_instance(	BusMuxOut, 
