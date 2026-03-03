@@ -55,7 +55,7 @@ register HI(clear, clock, HIin, BusMuxOut, BusMuxInHI);
 register LO(clear, clock, LOin, BusMuxOut, BusMuxInLO);
 
 wire [8:0] RAM_address = MARdataOut[8:0];
-wire [31:] RAM_dataOut;
+wire [31:0] RAM_dataOut;
 
 MDR MDR_Instance(	
 						clear, 
