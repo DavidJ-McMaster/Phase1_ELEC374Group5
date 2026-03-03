@@ -1,5 +1,5 @@
 `timescale 1ns/10ps
-module DivDataPath_tb;
+module Sub_tb;
   
 reg 	Zout, 
 		R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, 
@@ -15,21 +15,18 @@ reg 	Read,
 reg clock, clear;
 reg [4:0] opcode;
 reg [31:0] Mdatain;
-  
-parameter	Default 		= 4'b0000, 
-				Reg_load1a 	= 4'b0001, 
-				Reg_load1b 	= 4'b0010,
-				Reg_load2a 	= 4'b0011,
-				Reg_load2b 	= 4'b0100, 
-				Reg_load3a 	= 4'b0101, 
-				T0 			= 4'b0110, 
-				T1 			= 4'b0111,
-            T2 			= 4'b1000, 
-				T3 			= 4'b1001, 
-				T4 			= 4'b1010, 
-				T5 			= 4'b1011, 
-				T6 			= 4'b1100, 
-				T7 			= 4'b1101;
+
+parameter Default     = 4'b0000,
+          Reg_load1a  = 4'b0001,
+          Reg_load1b  = 4'b0010,
+          Reg_load2a  = 4'b0011,
+          Reg_load2b  = 4'b0100,
+          T0          = 4'b0101,
+          T1          = 4'b0110,
+          T2          = 4'b0111,
+          T3          = 4'b1000,
+          T4          = 4'b1001,
+          T5          = 4'b1010;
 	
 reg [3:0] Present_state = Default;
 	
@@ -74,8 +71,7 @@ always@(posedge clock)
 			T2 		  : Present_state <= T3;
 			T3 		  : Present_state <= T4;
 			T4 		  : Present_state <= T5;
-			T5 		  : Present_state <= T6;
-			T6 		  : Present_state <= Default;
+			T5			  : Present_state <= Default;
 			default 	  : Present_state <= Default;
 		endcase
 	end
@@ -108,28 +104,28 @@ always@(Present_state)
 				
 			Reg_load1a:
 				begin
-					Read		=1;
-					MDRin		=1;
-					Mdatain	=32'hffffffef; // loads into MDR hffffffef
+					Read		= 1;
+					MDRin		= 1;
+					Mdatain	= 32'h00000000; // loads into MDR
 				end
 				
 			Reg_load1b:
 				begin
 					MDRout	=1;
-					R3in		=1;		// MDR writes to R3 (R3 = 0xffffffef)
+					R5in		=1;		// MDR writes to R5 (R3 = 0x00000034)
 				end
 				
 			Reg_load2a:
 				begin
 					Read		=1;
 					MDRin		=1;
-					Mdatain	=32'h00000002;	// Loads value into MDR
+					Mdatain	=32'h00000001;	// Loads value into MDR
 				end
 				
 			Reg_load2b:
 				begin
 					MDRout	=1;
-					R1in		=1;		// MDR writes to R1 (R1 = 0x00000002)
+					R6in		=1;		// MDR writes to R6 (R1 = 0x00000045)
 				end
 				
 				
@@ -148,7 +144,7 @@ always@(Present_state)
 					
 					Read		=1;
 					MDRin		=1;
-					Mdatain	=32'h79880000; //IR coding for div r3, r1
+					Mdatain	=32'h212B0000; //IR coding for add r2, r5, r6
 				end
 				
 			T2:
@@ -160,28 +156,22 @@ always@(Present_state)
 				
 			T3:
 				begin
-					R3out	=1;	// loads r3 value into Y
+					R5out	=1;	// loads r5 value into Y
 					Yin	=1;
 				end
 				
 			T4:
 				begin
 					
-					R1out		=1;			// Loads R1 into bus, then Multiplies Y by R1 (aka r3*r1)
-					opcode	=5'b01111; //opcode for Mult
+					R6out		=1;			// Loads R6 into bus, then adds r5 and r6
+					opcode	=5'b00100; //opcode for add
 					Zin		=1;			
 				end
 				
 			T5:
 				begin
-					Zlowout	=1;		//Load the low 32 bits into LO
-					LOin		=1;
-				end
-				
-			T6:
-				begin
-					Zhighout	=1;	//Loads the high 32 into HI
-					HIin		=1;
+					Zlowout	=1;		//Load the value into r2
+					R2in		=1;
 				end
 				
 			default:

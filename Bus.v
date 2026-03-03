@@ -28,30 +28,31 @@ always @(*)
 						InPortOut, Cout};
 					
 			case(state_sel)
-				32'h00000001: select = 5'd23;
-				32'h00000002: select = 5'd22;
-				32'h00000004: select = 5'd21;
-				32'h00000008: select = 5'd20;
-				32'h00000010: select = 5'd19;
-				32'h00000020: select = 5'd18;
-				32'h00000040: select = 5'd17;
-				32'h00000080: select = 5'd16;
-				32'h00000100: select = 5'd15;
-				32'h00000200: select = 5'd14;
-				32'h00000400: select = 5'd13;
-				32'h00000800: select = 5'd12;
-				32'h00001000: select = 5'd11;
-				32'h00002000: select = 5'd10;
-				32'h00004000: select = 5'd9;
-				32'h00008000: select = 5'd8;
-				32'h00010000: select = 5'd7;
-				32'h00020000: select = 5'd6;
-				32'h00040000: select = 5'd5;
-				32'h00080000: select = 5'd4;
-				32'h00100000: select = 5'd3;
-				32'h00200000: select = 5'd2;
-				32'h00400000: select = 5'd1;
-				32'h00800000: select = 5'd0;
+				24'h800000: select = 5'd0;   // R0out
+            24'h400000: select = 5'd1;   // R1out
+            24'h200000: select = 5'd2;   // R2out
+            24'h100000: select = 5'd3;   // R3out
+            24'h080000: select = 5'd4;   // R4out
+            24'h040000: select = 5'd5;   // R5out
+            24'h020000: select = 5'd6;   // R6out
+            24'h010000: select = 5'd7;   // R7out
+            24'h008000: select = 5'd8;   // R8out
+            24'h004000: select = 5'd9;   // R9out
+            24'h002000: select = 5'd10;  // R10out
+            24'h001000: select = 5'd11;  // R11out
+            24'h000800: select = 5'd12;  // R12out
+            24'h000400: select = 5'd13;  // R13out
+            24'h000200: select = 5'd14;  // R14out
+            24'h000100: select = 5'd15;  // R15out
+            24'h000080: select = 5'd16;  // HIout
+            24'h000040: select = 5'd17;  // LOout
+            24'h000020: select = 5'd18;  // Zhighout
+            24'h000010: select = 5'd19;  // Zlowout
+            24'h000008: select = 5'd20;  // PCout
+            24'h000004: select = 5'd21;  // MDRout
+            24'h000002: select = 5'd22;  // InPortOut
+            24'h000001: select = 5'd23;  // Cout (C sign-extended)
+            default:    select = 5'd31;   // safe default (NONE)
 			endcase
 	end
 	
@@ -82,8 +83,11 @@ always @(*)
 			5'd21: result = BusMuxInMDR;
 			5'd22: result = BusMuxIninport;
 			5'd23: result = BusMuxIncSignExtended;
+			default: result = 32'd0; // Default = NONE
 		endcase
 	end
-assign BusMuxOut = result;
+	
+	assign BusMuxOut = result;
+	
 endmodule
 			
