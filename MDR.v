@@ -1,4 +1,5 @@
 module MDR #(parameter DATA_WIDTH_IN = 32, DATA_WIDTH_OUT = 32, INIT = 32'b0)(
+	//phase 2
 	input wire 								clear, clock, MDRin, read,
 	input wire [DATA_WIDTH_IN-1:0]	BusMuxOut,
 	input wire [DATA_WIDTH_IN-1:0]	Mdatain,

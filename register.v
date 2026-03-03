@@ -10,7 +10,7 @@ always @ (posedge clock or posedge clear)
 	begin
 		if(clear)
 			begin
-				BusMuxIn<= INIT[DATA_WIDTH_IN-1:0];
+				BusMuxIn<= INIT;
 			end
 		else if (enable)
 			begin

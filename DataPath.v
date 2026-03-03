@@ -1,4 +1,6 @@
 module DataPath(
+//PHASE 2 DATAPATH
+
 	input wire clock, clear,
 	input wire Zout, R0out, R1out, R2out, R3out, R4out, R5out, R6out, R7out, R8out, R9out, R10out, R11out, R12out, R13out, R14out, R15out, 
 	input wire HIout, LOout, Zhighout, Zlowout, PCout, MDRout, InPortout, Cout,
@@ -7,10 +9,10 @@ module DataPath(
 	
 	input wire R0in, R1in, R2in, R3in, R4in, R5in,R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in, 
 				  
-	input wire PCin, IRin, HIin, LOin, MARin, MDRin, Read, 
+	input wire PCin, IRin, HIin, LOin, MARin, MDRin, Read, Write,
 	input wire Zhighin, Zlowin,
 	
-	input wire [31:0] Mdatain,
+	//input wire [31:0] Mdatain,
 	input wire [4:0] opcode
 );
 
@@ -52,7 +54,25 @@ register MAR(clear, clock, MARin, BusMuxOut, MARdataOut);
 register HI(clear, clock, HIin, BusMuxOut, BusMuxInHI);
 register LO(clear, clock, LOin, BusMuxOut, BusMuxInLO);
 
-MDR MDR_Instance(clear, clock, MDRin, Read, BusMuxOut, Mdatain, BusMuxInMDR);
+wire [8:0] RAM_address = MARdataOut[8:0];
+wire [31:] RAM_dataOut;
+
+MDR MDR_Instance(	
+						clear, 
+						clock, 
+						MDRin, 
+						Read, 
+						BusMuxOut, 
+						RAM_dataOut, 
+						BusMuxInMDR);
+						
+RAM RAM_Instance(
+						clock,
+						Read,
+						Write,
+						BusMuxInMDR,
+						RAM_address,
+						RAM_dataOut);
 
 wire[31:0] ALU_HI, ALU_LO;
 ALU ALU_Instance(opcode, YdataOut, BusMuxOut, ALU_HI, ALU_LO);
